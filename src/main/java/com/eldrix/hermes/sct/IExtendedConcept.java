@@ -10,9 +10,7 @@ import java.util.Set;
  */
 public interface IExtendedConcept extends IConcept {
     List<IDescription> descriptions();
-
-    IDescription preferredDescription();
-
+    
     Map<Long, Set<Long>> parentRelationships();
 
     Map<Long, Set<Long>> directParentRelationships();
