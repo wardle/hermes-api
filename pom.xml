@@ -6,11 +6,11 @@
 
   <groupId>com.eldrix</groupId>
   <artifactId>hermes-api</artifactId>
-  <version>1.0.15</version>
+  <version>1.0.16</version>
   <packaging>jar</packaging>
 
   <name>hermes-api</name>
-  <description>Definitions for the java hermes API.</description>
+  <description>Definitions for the Java Hermes API.</description>
   <url>http://github.com/wardle/hermes-api</url>
 
   <developers>
