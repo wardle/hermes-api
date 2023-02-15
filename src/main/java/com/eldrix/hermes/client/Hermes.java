@@ -27,6 +27,7 @@ public final class Hermes {
     private static final IFn parentRelationshipsOfTypeFn;
     private static final IFn childRelationshipsOfTypeFn;
     private static final IFn allChildrenFn;
+    private static final IFn allParentsFn;
     private static final IFn lowerCaseTermFn;
     private static final IFn synonymsFn;
     private static final IFn areAnyFn;
@@ -50,6 +51,7 @@ public final class Hermes {
         parentRelationshipsOfTypeFn = Clojure.var("com.eldrix.hermes.core", "get-parent-relationships-of-type");
         childRelationshipsOfTypeFn = Clojure.var("com.eldrix.hermes.core", "get-child-relationships-of-type");
         allChildrenFn = Clojure.var("com.eldrix.hermes.core", "get-all-children");
+        allParentsFn = Clojure.var("com.eldrix.hermes.core", "get-all-parents");
         lowerCaseTermFn = Clojure.var("com.eldrix.hermes.snomed", "term->lowercase");
         synonymsFn = Clojure.var("com.eldrix.hermes.core", "get-synonyms");
         areAnyFn = Clojure.var("com.eldrix.hermes.core", "are-any?");
@@ -210,6 +212,18 @@ public final class Hermes {
     @SuppressWarnings("unchecked")
     public Collection<Long> parentsOfType(long conceptId, long typeConceptId) {
         return (Collection<Long>) parentRelationshipsOfTypeFn.invoke(_hermes, conceptId, typeConceptId);
+    }
+
+    /**
+     * Returns concept identifiers for the transitive parent concepts of the
+     * specified concept. By design, but perhaps unintuitively, this includes
+     * the source concept identifier.
+     * @param conceptId
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<Long> allParents(long conceptId) {
+        return (Collection<Long>) allParentsFn.invoke(_hermes, conceptId);
     }
 
     /**
