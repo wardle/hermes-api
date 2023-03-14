@@ -1,13 +1,16 @@
 # hermes-api
 
-This defines the java API interfaces for [hermes](https://github.com/wardle/hermes), making
-it easier to use hermes from java clients. 
+This defines the Java API interfaces for [hermes](https://github.com/wardle/hermes), making
+it easier to use hermes from Java, or other JVM languages. 
 
-This is not designed to be referenced directly by client applications. 
-Instead, users interested in using Hermes from Java, or another JVM hosted 
+This library is not designed to be referenced directly by client applications. 
+It is actually a dependency of the main hermes library and so will be included 
+in your project as a transitive dependency when you use hermes.
+
+Therefore, users interested in using hermes from Java, or another JVM hosted 
 language should simply use the hermes library jar directly from their build tool. 
 
-For example:
+For example, here is how I use this from a Java application using maven:
 
 ```xml
 <dependency>
@@ -16,6 +19,9 @@ For example:
   <version>1.0.960</version>
 </dependency>
 ```
+
+You will want to double check that you are using the latest version.
+
 As the hermes library jar is published to the Clojars repository, you may need
 to explicitly reference that repository in your build configuration:
 
@@ -37,9 +43,10 @@ You should be able to work out how to use it [from the source code](https://gith
 
 ##### Developer documentation
 
-To deploy the latest version of this library to Clojars, simply run
+To publish the latest version of this library to Clojars, run
 
 ```shell
 mvn clean deploy
 ```
 
+For this to work successfully, you will need the appropriate credentials.
