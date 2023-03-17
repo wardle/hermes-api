@@ -275,6 +275,12 @@ public final class Hermes {
         }
         return (List<IResult>) expandEcl.invoke(_hermes, ecl);
     }
+
+    @SuppressWarnings("unchecked")
+    public List<IResult> expandEcl(String ecl, int maxHits) {
+        return (List<IResult>) expandEcl.invoke(_hermes, ecl, maxHits);
+    }
+
     @SuppressWarnings("unchecked")
     public Set<Long> intersectEcl(Collection<Long> conceptIds, String ecl) {
         return (Set<Long>) intersectEcl.invoke(_hermes, conceptIds, ecl);
