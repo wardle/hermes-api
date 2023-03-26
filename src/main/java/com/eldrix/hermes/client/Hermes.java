@@ -20,9 +20,9 @@ public final class Hermes {
     private static final IFn intoFn;
     private static final Object emptyMap;
     private static final IFn searchFn;
-    private static final IFn getConceptFn;
-    private static final IFn getExtendedConceptFn;
-    private static final IFn getPreferredSynonymFn;
+    private static final IFn conceptFn;
+    private static final IFn extendedConceptFn;
+    private static final IFn preferredSynonymFn;
     private static final IFn subsumedByFn;
     private static final IFn parentRelationshipsOfTypeFn;
     private static final IFn childRelationshipsOfTypeFn;
@@ -44,16 +44,16 @@ public final class Hermes {
 
         require.invoke(Clojure.read("com.eldrix.hermes.core"));
         searchFn = Clojure.var("com.eldrix.hermes.core", "search");
-        getConceptFn = Clojure.var("com.eldrix.hermes.core", "get-concept");
-        getExtendedConceptFn = Clojure.var("com.eldrix.hermes.core", "get-extended-concept");
-        getPreferredSynonymFn = Clojure.var("com.eldrix.hermes.core", "get-preferred-synonym");
+        conceptFn = Clojure.var("com.eldrix.hermes.core", "concept");
+        extendedConceptFn = Clojure.var("com.eldrix.hermes.core", "extended-concept");
+        preferredSynonymFn = Clojure.var("com.eldrix.hermes.core", "preferred-synonym");
         subsumedByFn = Clojure.var("com.eldrix.hermes.core", "subsumed-by?");
-        parentRelationshipsOfTypeFn = Clojure.var("com.eldrix.hermes.core", "get-parent-relationships-of-type");
-        childRelationshipsOfTypeFn = Clojure.var("com.eldrix.hermes.core", "get-child-relationships-of-type");
-        allChildrenFn = Clojure.var("com.eldrix.hermes.core", "get-all-children");
-        allParentsFn = Clojure.var("com.eldrix.hermes.core", "get-all-parents");
+        parentRelationshipsOfTypeFn = Clojure.var("com.eldrix.hermes.core", "parent-relationships-of-type");
+        childRelationshipsOfTypeFn = Clojure.var("com.eldrix.hermes.core", "child-relationships-of-type");
+        allChildrenFn = Clojure.var("com.eldrix.hermes.core", "all-children");
+        allParentsFn = Clojure.var("com.eldrix.hermes.core", "all-parents");
         lowerCaseTermFn = Clojure.var("com.eldrix.hermes.snomed", "term->lowercase");
-        synonymsFn = Clojure.var("com.eldrix.hermes.core", "get-synonyms");
+        synonymsFn = Clojure.var("com.eldrix.hermes.core", "synonyms");
         areAnyFn = Clojure.var("com.eldrix.hermes.core", "are-any?");
         expandEcl = Clojure.var("com.eldrix.hermes.core", "expand-ecl");
         expandEclHistoric = Clojure.var("com.eldrix.hermes.core", "expand-ecl-historic");
@@ -123,7 +123,7 @@ public final class Hermes {
     }
 
     public IConcept concept(long conceptId) {
-        return (IConcept) getConceptFn.invoke(_hermes, conceptId);
+        return (IConcept) conceptFn.invoke(_hermes, conceptId);
     }
 
     public List<IConcept> concepts(List<Long> conceptIds) {
@@ -136,7 +136,7 @@ public final class Hermes {
      * @return
      */
     public IExtendedConcept extendedConcept(long conceptId) {
-        return (IExtendedConcept) getExtendedConceptFn.invoke(_hermes, conceptId);
+        return (IExtendedConcept) extendedConceptFn.invoke(_hermes, conceptId);
     }
 
     /**
@@ -147,7 +147,7 @@ public final class Hermes {
      * @return
      */
     public IDescription preferredSynonym(long conceptId, String languageTag) {
-        return (IDescription) getPreferredSynonymFn.invoke(_hermes, conceptId, languageTag);
+        return (IDescription) preferredSynonymFn.invoke(_hermes, conceptId, languageTag);
     }
 
     /**
