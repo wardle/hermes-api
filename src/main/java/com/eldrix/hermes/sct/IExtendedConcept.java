@@ -15,5 +15,7 @@ public interface IExtendedConcept extends IConcept {
 
     Map<Long, Set<Long>> directParentRelationships();
 
+    List<IConcreteValue> concreteValues();
+
     Set<Long> refsets();
 }
