@@ -34,6 +34,7 @@ public final class Hermes {
     private static final IFn expandEcl;
     private static final IFn expandEclHistoric;
     private static final IFn intersectEcl;
+    private static final IFn isValidEcl;
 
     static {
         IFn require = Clojure.var("clojure.core", "require");
@@ -58,6 +59,7 @@ public final class Hermes {
         expandEcl = Clojure.var("com.eldrix.hermes.core", "expand-ecl");
         expandEclHistoric = Clojure.var("com.eldrix.hermes.core", "expand-ecl-historic");
         intersectEcl = Clojure.var("com.eldrix.hermes.core", "intersect-ecl");
+        isValidEcl = Clojure.var("com.eldrix.hermes.core", "valid-ecl?");
     }
 
     private static Keyword keyword(String s) {
@@ -284,6 +286,10 @@ public final class Hermes {
     @SuppressWarnings("unchecked")
     public Set<Long> intersectEcl(Collection<Long> conceptIds, String ecl) {
         return (Set<Long>) intersectEcl.invoke(_hermes, conceptIds, ecl);
+    }
+
+    public boolean isValidEcl(String ecl) {
+        return (boolean) isValidEcl.invoke(_hermes, ecl);
     }
 
     public static class SearchRequest {
