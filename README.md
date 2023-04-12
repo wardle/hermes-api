@@ -7,6 +7,8 @@ This library is not designed to be referenced directly by client applications.
 It is actually a dependency of the main hermes library and so will be included 
 in your project as a transitive dependency when you use hermes.
 
+DO NOT specify hermes-api in your pom.xml. 
+
 Therefore, users interested in using hermes from Java, or another JVM hosted 
 language should simply use the hermes library jar directly from their build tool. 
 
@@ -16,11 +18,11 @@ For example, here is how I use this from a Java application using maven:
 <dependency>
   <groupId>com.eldrix</groupId>
   <artifactId>hermes</artifactId>
-  <version>1.0.960</version>
+  <version>*******</version>
 </dependency>
 ```
 
-You will want to double check that you are using the latest version.
+You will want to double check that you are using the [latest version](https://clojars.org/com.eldrix/hermes).
 
 As the hermes library jar is published to the Clojars repository, you may need
 to explicitly reference that repository in your build configuration:
