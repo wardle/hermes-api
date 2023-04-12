@@ -289,7 +289,7 @@ public final class Hermes {
     }
 
     public boolean isValidEcl(String ecl) {
-        return (boolean) isValidEcl.invoke(_hermes, ecl);
+        return (boolean) isValidEcl.invoke(ecl);
     }
 
     public static class SearchRequest {
