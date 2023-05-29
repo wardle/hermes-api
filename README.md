@@ -1,5 +1,12 @@
 # hermes-api
 
+This repository is now archived, with code moved into the main [hermes](https://github.com/wardle/hermes) repository.
+
+
+
+
+-----
+
 This defines the Java API interfaces for [hermes](https://github.com/wardle/hermes), making
 it easier to use hermes from Java, or other JVM languages. 
 
