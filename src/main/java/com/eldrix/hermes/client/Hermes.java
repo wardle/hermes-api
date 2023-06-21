@@ -19,6 +19,7 @@ public final class Hermes {
     private static final IFn closeFn;
     private static final IFn intoFn;
     private static final Object emptyMap;
+    private static final IFn matchLocaleFn;
     private static final IFn searchFn;
     private static final IFn conceptFn;
     private static final IFn extendedConceptFn;
@@ -33,6 +34,7 @@ public final class Hermes {
     private static final IFn areAnyFn;
     private static final IFn expandEcl;
     private static final IFn expandEclHistoric;
+    private static final IFn expandEclPreferred;
     private static final IFn intersectEcl;
     private static final IFn isValidEcl;
 
@@ -44,6 +46,7 @@ public final class Hermes {
         emptyMap = Clojure.read("{}");
 
         require.invoke(Clojure.read("com.eldrix.hermes.core"));
+        matchLocaleFn = Clojure.var("com.eldrix.hermes.core", "match-locale");
         searchFn = Clojure.var("com.eldrix.hermes.core", "search");
         conceptFn = Clojure.var("com.eldrix.hermes.core", "concept");
         extendedConceptFn = Clojure.var("com.eldrix.hermes.core", "extended-concept");
@@ -58,6 +61,7 @@ public final class Hermes {
         areAnyFn = Clojure.var("com.eldrix.hermes.core", "are-any?");
         expandEcl = Clojure.var("com.eldrix.hermes.core", "expand-ecl");
         expandEclHistoric = Clojure.var("com.eldrix.hermes.core", "expand-ecl-historic");
+        expandEclPreferred = Clojure.var("com.eldrix.hermes.core", "expand-ecl*");
         intersectEcl = Clojure.var("com.eldrix.hermes.core", "intersect-ecl");
         isValidEcl = Clojure.var("com.eldrix.hermes.core", "valid-ecl?");
     }
@@ -108,6 +112,11 @@ public final class Hermes {
      */
     public void close() {
         closeFn.invoke(_hermes);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Long> matchLocale(String languageRange) {
+        return (List<Long>) matchLocaleFn.invoke(_hermes, languageRange);
     }
 
     /**
@@ -281,6 +290,49 @@ public final class Hermes {
     @SuppressWarnings("unchecked")
     public List<IResult> expandEcl(String ecl, int maxHits) {
         return (List<IResult>) expandEcl.invoke(_hermes, ecl, maxHits);
+    }
+
+    /**
+     * Expand ECL, returning a collection of results containing only preferred
+     * synonyms from the given language preferences. This means there may be
+     * more than one result per concept depending on language preferences. If
+     * different behaviour is needed, then manually use {@link #matchLocale(String)}
+     * and use the first reference set id in a call to {@link #expandEclPreferred(String, Long)}
+     * @param ecl
+     * @param languageRange
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public List<IResult> expandEclPreferred(String ecl, String languageRange) {
+        List<Long> refsetIds = matchLocale(languageRange);
+        return (List<IResult>) expandEclPreferred.invoke(_hermes, ecl, refsetIds);
+    }
+    /**
+     * Expand ECL, returning a collection of results containing only preferred
+     * synonyms from the given language reference set. Results returned will include
+     * a 'system' defined preferredTerm, cached at the time of index creation, which
+     * should generally be ignored when using this method, and the 'term'
+     * which will reflect the preferred term for the requested language.
+     * @param ecl
+     * @param languageRefsetId - identifier of the required language reference set
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public List<IResult> expandEclPreferred(String ecl, Long languageRefsetId) {
+        return (List<IResult>) expandEclPreferred.invoke(_hermes, ecl, Collections.singletonList(languageRefsetId));
+    }
+
+    /**
+     * Expand ECL, returning a collection of results containing only preferred
+     * synonyms from the given language preferences. This means there may be
+     * more than one result per concept depending on language preferences.
+     * @param ecl
+     * @param languageRefsetIds - a collection of language reference set ids
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public List<IResult> expandEclPreferred(String ecl, Collection<Long> languageRefsetIds) {
+        return (List<IResult>) expandEclPreferred.invoke(_hermes, ecl, languageRefsetIds);
     }
 
     @SuppressWarnings("unchecked")
