@@ -45,10 +45,29 @@ You should be able to work out how to use it [from the source code](https://gith
 
 ##### Developer documentation
 
-To publish the latest version of this library to Clojars, run
+To publish the latest version of this library to sonatype, run
 
 ```shell
 mvn clean deploy
 ```
 
 For this to work successfully, you will need the appropriate credentials.
+Make sure you have a valid .m2/settings.xml file:
+```xml
+<settings>
+  <servers>
+    <server>
+      <id>ossrh</id>
+      <username>wardle</username>
+      <password>*******</password>
+    </server>
+  </servers>
+</settings>
+```
+
+Make sure you have a valid GPG key and it is uploaded to a public key server. e.g.
+```shell
+gpg --gen-key
+gpg --list-keys
+gpg --keyserver keyserver.ubuntu.com --send-keys XXXXXXX
+```
