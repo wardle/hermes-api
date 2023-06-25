@@ -6,7 +6,7 @@
 
   <groupId>com.eldrix</groupId>
   <artifactId>hermes-api</artifactId>
-  <version>1.0.25</version>
+  <version>1.0.31</version>
   <packaging>jar</packaging>
 
   <name>hermes-api</name>
