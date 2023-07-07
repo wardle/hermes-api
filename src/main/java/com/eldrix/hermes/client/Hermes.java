@@ -90,30 +90,35 @@ public final class Hermes {
     }
 
     /**
-     * Open a Hermes service from the local filesystem at the path specified
-     * @param path
-     * @return
+     * Open a hermes service from the local filesystem at the path specified
+     * @param path - path on local filesystem to data files
+     * @return - a hermes service
      */
     public static Hermes openLocal(String path) {
         return new Hermes(path);
     }
 
     /**
-     * Open a Hermes service using an already established service
-     * @param svc
-     * @return
+     * Open a hermes service using an already established service
+     * @param svc - hermes service
+     * @return - a hermes service
      */
     public static Hermes open(Object svc) {
         return new Hermes(svc);
     }
 
     /**
-     * Close the Hermes service.
+     * Close the hermes service.
      */
     public void close() {
         closeFn.invoke(_hermes);
     }
 
+    /**
+     * Return a list of language reference set ids for the language range
+     * @param languageRange - language Range defined in RFC 4647
+     * @return a list of language reference set identifiers
+     */
     @SuppressWarnings("unchecked")
     public List<Long> matchLocale(String languageRange) {
         return (List<Long>) matchLocaleFn.invoke(_hermes, languageRange);
@@ -121,8 +126,8 @@ public final class Hermes {
 
     /**
      * Perform a search for descriptions.
-     * @param request
-     * @return
+     * @param request - an initialised SearchRequest
+     * @return results of the search
      */
     public List<IResult> search(SearchRequest request) {
         @SuppressWarnings("unchecked")
@@ -133,10 +138,20 @@ public final class Hermes {
         return Collections.emptyList(); // unlike clojure, java cannot treat null as an empty list
     }
 
+    /**
+     * Return the concept with the specified identifier
+     * @param conceptId - concept identifier
+     * @return concept
+     */
     public IConcept concept(long conceptId) {
         return (IConcept) conceptFn.invoke(_hermes, conceptId);
     }
 
+    /**
+     * Return the concepts with the specified identifiers
+     * @param conceptIds
+     * @return concepts
+     */
     public List<IConcept> concepts(List<Long> conceptIds) {
         return conceptIds.stream().map(this::concept).collect(Collectors.toList());
     }
@@ -144,7 +159,7 @@ public final class Hermes {
     /**
      * Return a denormalized 'extended' version of the concept specified.
      * @param conceptId
-     * @return
+     * @return IExtendedConcept - a denormalised 'extended' version of a concept
      */
     public IExtendedConcept extendedConcept(long conceptId) {
         return (IExtendedConcept) extendedConceptFn.invoke(_hermes, conceptId);
@@ -155,7 +170,7 @@ public final class Hermes {
      * language preference specified.
      * @param conceptId
      * @param languageTag
-     * @return
+     * @return IDescription representing the preferred synonym
      */
     public IDescription preferredSynonym(long conceptId, String languageTag) {
         return (IDescription) preferredSynonymFn.invoke(_hermes, conceptId, languageTag);
@@ -164,21 +179,27 @@ public final class Hermes {
     /**
      * Return the preferred synonym for the concept specified using the system
      * default locale.
-     * @param conceptId
-     * @return
+     * @param conceptId - concept identifier
+     * @return IDescription representing the preferred synonym
      */
     public IDescription preferredSynonym(long conceptId) {
         return preferredSynonym(conceptId, Locale.getDefault().toLanguageTag());
     }
 
+    /**
+     * Return the preferred term for the concept specified in the default system
+     * locale.
+     * @param conceptId - concept identifier
+     * @return - the preferred term for the concept
+     */
     public String preferredTerm(long conceptId) {
-        return (String) preferredSynonym(conceptId).term();
+        return preferredSynonym(conceptId).term();
     }
 
     /**
      * Return a lower-case version of the preferred term specified.
-     * @param conceptId
-     * @return
+     * @param conceptId - concept identifier
+     * @return the preferred term
      */
     public String lowerCasePreferredTerm(long conceptId) {
         return (String) lowerCaseTermFn.invoke(preferredSynonym(conceptId));
@@ -186,20 +207,33 @@ public final class Hermes {
 
     /**
      * Return the synonyms of the concept specified.
-     * @param conceptId
-     * @return
+     * @param conceptId - concept identifier
+     * @return a list of synonyms
      */
     public List<String> synonyms(long conceptId) {
         @SuppressWarnings("unchecked")
-        List<IDescription> IDescriptions = (List<IDescription>) synonymsFn.invoke(_hermes, conceptId);
-        return IDescriptions.stream().map(d -> {return (String) d.term();}).collect(Collectors.toList());
+        List<IDescription> descriptions = (List<IDescription>) synonymsFn.invoke(_hermes, conceptId);
+        return descriptions.stream().map(IDescription::term).collect(Collectors.toList());
+    }
+
+    /**
+     * Return a list of synonyms for the concept specified, returning only
+     * those either preferred or acceptable in the given language reference sets
+     * @param conceptId - concept id
+     * @param langRefsetIds - a collection of language reference set ids
+     * @return a list of synonyms
+     */
+    public List<String> synonyms(long conceptId, Collection<Long> langRefsetIds) {
+        @SuppressWarnings("unchecked")
+        List<IDescription> descriptions = (List<IDescription>) synonymsFn.invoke(_hermes, conceptId, langRefsetIds);
+        return descriptions.stream().map(IDescription::term).collect(Collectors.toList());
     }
 
     /**
      * Is the concept a type of the parent concept?
-     * @param concept
-     * @param parent
-     * @return
+     * @param concept - the concept to be tested
+     * @param parent - the parent concept
+     * @return boolean
      */
     public boolean isAConcept(IConcept concept, IConcept parent) {
         return (boolean) subsumedByFn.invoke(_hermes, concept.id(), parent.id());
