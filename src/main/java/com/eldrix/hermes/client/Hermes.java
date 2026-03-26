@@ -554,15 +554,13 @@ public final class Hermes {
     // ---- Compositional grammar / expressions ----
 
     private static final class ExpressionImpl implements IExpression {
-        final Object _hermes;
         final Object _expression;
-        ExpressionImpl(Object hermes, Object expression) {
-            _hermes = hermes;
+        ExpressionImpl(Object expression) {
             _expression = expression;
         }
         @Override
         public String toString() {
-            return (String) renderExpressionStarFn.invoke(_hermes, _expression);
+            return (String) renderExpressionStarFn.invoke(_expression);
         }
     }
 
@@ -572,7 +570,7 @@ public final class Hermes {
      * @return the parsed expression
      */
     public IExpression parseExpression(String s) {
-        return new ExpressionImpl(_hermes, parseExpressionFn.invoke(_hermes, s));
+        return new ExpressionImpl(parseExpressionFn.invoke(_hermes, s));
     }
 
     /**
@@ -786,6 +784,54 @@ public final class Hermes {
 
     public static SearchRequestBuilder newSearchRequestBuilder() {
         return new SearchRequestBuilder();
+    }
+
+    /**
+     * Result of a subsumption test between two expressions, aligned with FHIR
+     * $subsumes operation outcomes.
+     */
+    public enum SubsumptionResult {
+        EQUIVALENT("equivalent"),
+        SUBSUMES("subsumes"),
+        SUBSUMED_BY("subsumed-by"),
+        NOT_SUBSUMED("not-subsumed");
+
+        private final String keyword;
+
+        SubsumptionResult(String keyword) {
+            this.keyword = keyword;
+        }
+
+        public String keyword() {
+            return keyword;
+        }
+
+        public static SubsumptionResult fromKeyword(String name) {
+            for (SubsumptionResult r : values()) {
+                if (r.keyword.equals(name)) {
+                    return r;
+                }
+            }
+            throw new IllegalArgumentException("Unknown subsumption result: " + name);
+        }
+    }
+
+    /**
+     * Mode of subsumption testing between expressions.
+     */
+    public enum SubsumptionMode {
+        STRUCTURAL("structural"),
+        OWL("owl");
+
+        private final String keyword;
+
+        SubsumptionMode(String keyword) {
+            this.keyword = keyword;
+        }
+
+        public String keyword() {
+            return keyword;
+        }
     }
 
 }
